@@ -17,7 +17,11 @@ func Index(ctx *fasthttp.RequestCtx) {
 		fmt.Fprintln(ctx, err.Error())
 		return
 	}
-	rows, err := conn.Query("SELECT getdate()")
+	query, err := Asset("queries/example/example.sql")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	rows, err := conn.Query(string(query))
 
 	if err != nil {
 		fmt.Println("Deu ruim")
@@ -26,6 +30,7 @@ func Index(ctx *fasthttp.RequestCtx) {
 	for rows.Next() {
 		data := ""
 		rows.Scan(&data)
+		fmt.Println(data)
 	}
 	rows.Close()
 	return
